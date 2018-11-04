@@ -16,7 +16,7 @@ window.addEventListener('resize', function(){
 });
 controls = new THREE.OrbitControls(camera, renderer.domElement);
 // Create a qube
-var cubeGeometry = new THREE.BoxGeometry(1,1,1);
+var cubeGeometry = new THREE.BoxGeometry(2,2,2);
 
 // Create a texture map
 var cubeMaterials = [
@@ -34,7 +34,9 @@ var material = new THREE.MeshFaceMaterial(cubeMaterials);
 var cube = new THREE.Mesh(cubeGeometry, material);
 scene.add(cube);
 
+camera.position.y = 2;
 camera.position.z = 3;
+
 
 // Animation logic
 var update = function() {
