@@ -92,10 +92,10 @@ Math.random() * 2000 - 1000;
   sandStormVertices = [];
   sandStormSprite = sandStormTexture;
 
-  for ( let i = 0; i < 50000; i++ ) {
-      let x = Math.random() * 6000 - 1000;
-      let y = Math.random() * 6000 - 1000;
-      let z = Math.random() * 6000 - 1000;
+  for ( let i = 0; i < 200000; i++ ) {
+      let x = Math.random() * 10000 - 2000;
+      let y = Math.random() * 10000 - 2000;
+      let z = Math.random() * 10000 - 2000;
       sandStormVertices.push ( x, y, z );
   }
 
