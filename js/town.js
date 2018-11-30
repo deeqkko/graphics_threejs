@@ -3,9 +3,9 @@ var controls;
 var renderer;
 var sky, skyGeo, skyMat, skyMaterials = [];
 var ground, groundGeo, groundMat;
-var ambientLight, directionalLight1, spotLight1, spotLight2, spotLight3;
-var spotLight1Helper, spotLight2Helper, spotLight3Helper;
-var skyTexture, groundTexture, houseTexture, houseTexture2, roadTexture;
+var ambientLight, directionalLight1, spotLight1, spotLight2;
+// var spotLight1Helper, spotLight2Helper;
+var skyTexture, groundTexture, houseTexture, houseTexture2, roofTexture, roadTexture;
 var bgHouse = [], bgHouseGeo = [], bgHouseMat = [], bgHouseMaterials1 = [], bgHouseMaterials2 = [];
 var road = [], roadGeo = [], roadMat = [];
 const bgAmount = 15;
@@ -14,7 +14,7 @@ var init = function( ) {
 
   //Basic setup
   scene = new THREE.Scene( );
-  scene.fog = new THREE.FogExp2( 0xffffff, 0.0009);
+  scene.fog = new THREE.FogExp2( 0xffffff, 0.0002);
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 50000 );
   renderer = new THREE.WebGLRenderer( );
 
@@ -36,6 +36,8 @@ var init = function( ) {
   houseTexture2.wrapS = THREE.RepeatWrapping;
   houseTexture2.wrapT = THREE.RepeatWrapping;
 
+  roofTexture = new THREE.TextureLoader( ).load('../assets/Tiles_Roof.jpg');
+
   roadTexture = new THREE.TextureLoader( ).load('../assets/road.jpg');
   roadTexture.wrapS = THREE.RepeatWrapping;
   roadTexture.repeat.set(1, 1);
@@ -49,6 +51,8 @@ var init = function( ) {
 
   //OrbitControls setup
   controls = new THREE.OrbitControls( camera, renderer.domElement );
+  controls.autoRotate = true;
+
 
   //Scene resizing for a viewport resizing
   window.addEventListener('resize', function(){
@@ -66,6 +70,10 @@ var init = function( ) {
         map: skyTexture,
         side: THREE.DoubleSide,
       });
+    }
+
+
+    for (i = 0; i < 6; i++) {
       bgHouseMaterials1[i] = new THREE.MeshLambertMaterial({
         map: houseTexture,
         side: THREE.DoubleSide,
@@ -75,6 +83,12 @@ var init = function( ) {
         side: THREE.DoubleSide,
       });
     }
+    bgHouseMaterials1[2] = new THREE.MeshLambertMaterial({
+      map: roofTexture,
+    });
+    bgHouseMaterials2[2] = new THREE.MeshLambertMaterial({
+      map: roofTexture,
+    });
 
 
 
@@ -93,10 +107,11 @@ var init = function( ) {
 
   //Houses
   for ( i = 0; i < bgAmount; i++ ) {
-    bgHouseGeo[i] = new THREE.BoxBufferGeometry( 200, 600, 200);
     if  ( i % 2 == 0 ) {
+      bgHouseGeo[i] = new THREE.BoxBufferGeometry( 200, 800, 200);
       bgHouseMat[i] = new THREE.MeshFaceMaterial( bgHouseMaterials1 )
     } else {
+      bgHouseGeo[i] = new THREE.BoxBufferGeometry( 200, 500, 200);
       bgHouseMat[i] = new THREE.MeshFaceMaterial( bgHouseMaterials2 )
     }
   }
@@ -115,8 +130,8 @@ var init = function( ) {
 
 // Drawing scene
 var draw = function( ) {
-  ambientLight = new THREE.AmbientLight( 0xFFFFFF, 1);
-  directionalLight1 = new THREE.DirectionalLight( 0xFFFFFF, 1, 100 );
+  //ambientLight = new THREE.AmbientLight( 0xFFFFFF, 1);
+  directionalLight1 = new THREE.DirectionalLight( 0xFFFFFF, 0.5, 100 );
   directionalLight1.castShadow = true;
   directionalLight1.shadow.mapSize.width = 512;
   directionalLight1.shadow.mapSize.height = 512;
@@ -125,7 +140,7 @@ var draw = function( ) {
   scene.add( directionalLight1 );
 
 
-  spotLight1 = new THREE.SpotLight( 0xffffff, 1 );
+  spotLight1 = new THREE.SpotLight( 0xffffff, 0.5 );
   spotLight1.castShadow = true;
   spotLight1.shadow.mapSize.width = 1024;
   spotLight1.shadow.mapSize.height = 1024;
@@ -135,7 +150,7 @@ var draw = function( ) {
   scene.add( spotLight1 );
   spotLight1.position.set( 0, 4000, 2000);
 
-  spotLight2 = new THREE.SpotLight( 0xffffff, 1 );
+  spotLight2 = new THREE.SpotLight( 0xffffff, 0.5 );
   spotLight2.castShadow = true;
   spotLight2.shadow.mapSize.width = 1024;
   spotLight2.shadow.mapSize.height = 1024;
@@ -145,11 +160,11 @@ var draw = function( ) {
   scene.add( spotLight2 );
   spotLight2.position.set( 0, 4000, -2000);
 
-  spotLight1Helper = new THREE.SpotLightHelper( spotLight1 );
-  scene.add( spotLight1Helper );
+  // spotLight1Helper = new THREE.SpotLightHelper( spotLight1 );
+  // scene.add( spotLight1Helper );
 
-  spotLight2Helper = new THREE.SpotLightHelper( spotLight2 );
-  scene.add( spotLight2Helper );
+  // spotLight2Helper = new THREE.SpotLightHelper( spotLight2 );
+  // scene.add( spotLight2Helper );
 
   sky = new THREE.Mesh( skyGeo, skyMat );
   scene.add( sky );
@@ -180,12 +195,11 @@ var draw = function( ) {
     road[i].rotation.y = Math.PI / 2;
     road[i].position.set( -200, 2.5, (-8400 + (400 * i) + 200));
     scene.add( road[i] );
-    console.log(i);
   }
 
 
 
-  camera.position.set( 500, 1000, 400);
+  camera.position.set( 2000, 1000, 600);
   controls.update( );
 }
 
